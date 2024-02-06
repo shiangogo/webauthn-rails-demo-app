@@ -32,7 +32,9 @@ function callback(url, body) {
 }
 
 function create(callbackUrl, credentialOptions) {
+  console.log(credentialOptions);
   WebAuthnJSON.create({ "publicKey": credentialOptions }).then(function(credential) {
+    console.log(credential);
     callback(callbackUrl, credential);
   }).catch(function(error) {
     showMessage(error);
@@ -43,6 +45,7 @@ function create(callbackUrl, credentialOptions) {
 
 function get(credentialOptions) {
   WebAuthnJSON.get({ "publicKey": credentialOptions }).then(function(credential) {
+    console.log(credential);
     callback("/session/callback", credential);
   }).catch(function(error) {
     showMessage(error);

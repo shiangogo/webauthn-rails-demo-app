@@ -17,6 +17,14 @@ class RegistrationsController < ApplicationController
 
     if user.valid?
       session[:current_registration] = { challenge: create_options.challenge, user_attributes: user.attributes }
+      p "***************************************************"
+      p "session: "
+      p session[:current_registration]
+      p "user.attributes: "
+      p user.attributes
+      p "challenge: "
+      p create_options.challenge
+      p "***************************************************"
 
       respond_to do |format|
         format.json { render json: create_options }
@@ -29,15 +37,21 @@ class RegistrationsController < ApplicationController
   end
 
   def callback
+    p "***************************************************"
+    p session[:current_registration]
+    p session[:current_registration][:user_attributes]
+    p "***************************************************"
     user = User.create!(session[:current_registration][:user_attributes])
+    # if User.create! fails, it will raise an ActiveRecord::RecordInvalid error.
 
     begin
       webauthn_credential = relying_party.verify_registration(
-        params,
-        session[:current_registration][:challenge],
-        user_verification: true,
+        params, # raw_credential
+        session[:current_registration][:challenge], # challenge
+        user_verification: true, # user_verification
       )
 
+      # User has_many credentials
       credential = user.credentials.build(
         external_id: Base64.strict_encode64(webauthn_credential.raw_id),
         nickname: params[:credential_nickname],

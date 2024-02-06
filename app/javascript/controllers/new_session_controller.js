@@ -6,6 +6,7 @@ import { MDCTextField } from '@material/textfield';
 export default class extends Controller {
   static targets = ["usernameField"]
 
+  // event == ajax:success
   create(event) {
     var [data, status, xhr] = event.detail;
     console.log(data);

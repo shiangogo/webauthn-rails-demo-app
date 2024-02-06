@@ -12,6 +12,10 @@ class SessionsController < ApplicationController
         allow: user.credentials.pluck(:external_id),
         user_verification: "required"
       )
+      p "*****************************************************"
+      p "get_options: "
+      p get_options
+      p "*****************************************************"
 
       session[:current_authentication] = { challenge: get_options.challenge, username: session_params[:username] }
 
@@ -58,6 +62,10 @@ class SessionsController < ApplicationController
   private
 
   def session_params
+    p "********************************************************"
+    p "params: "
+    p params
+    p "********************************************************"
     params.require(:session).permit(:username)
   end
 end
